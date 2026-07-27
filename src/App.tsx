@@ -2,20 +2,29 @@ import { useState } from 'react';
 import './App.scss';
 
 import usersFromServer from './api/users';
-// import todosFromServer from './api/todos';
+import todosFromServer from './api/todos';
 
 export const App = () => {
   const [inputTitle, setInputTitle] = useState('');
-  const [selectAuthor, setSelectAuthor] = useState(0);
+  const [selectAuthor, setSelectAuthor] = useState('0');
   const [titleError, setTitleError] = useState(false);
   const [selectError, setSelectError] = useState(false);
+  const [todos, setTodos] = useState(todosFromServer);
+
+  function getUserId() {
+    const us = usersFromServer.find(user => {
+      return user.name === selectAuthor;
+    });
+
+    return us ? us.id : 0;
+  }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (inputTitle.length === 0 && selectAuthor === 0) {
+    if (inputTitle.length === 0 && selectAuthor === '0') {
       setTitleError(true);
       setSelectError(true);
-    } else if (selectAuthor === 0) {
+    } else if (selectAuthor === '0') {
       setSelectError(true);
       setTitleError(false);
     } else if (inputTitle.length === 0) {
@@ -24,8 +33,33 @@ export const App = () => {
     } else {
       setTitleError(false);
       setSelectError(false);
-      // enviar formulário
+      // enviar formulário abaixo
+      setTodos([
+        ...todos,
+        {
+          id: todos.length,
+          title: inputTitle,
+          completed: true,
+          userId: getUserId(),
+        },
+      ]);
+
+      // limpar
+      setInputTitle('');
+      setSelectAuthor('0');
     }
+  }
+
+  function getUser(todo: Todo) {
+    const userList = usersFromServer.find(user => {
+      return user.id === todo.userId;
+    });
+
+    return userList;
+  }
+
+  interface Todo {
+    userId: number;
   }
 
   return (
@@ -51,7 +85,7 @@ export const App = () => {
           <select
             data-cy="userSelect"
             onChange={event => {
-              setSelectAuthor(+event.target.value);
+              setSelectAuthor(event.target.value);
             }}
           >
             <option value="0" selected>
@@ -77,31 +111,21 @@ export const App = () => {
       </form>
 
       <section className="TodoList">
-        <article data-id="1" className="TodoInfo TodoInfo--completed">
-          <h2 className="TodoInfo__title">delectus aut autem</h2>
+        {todos.map(todo => {
+          return (
+            <article
+              key={todo.id}
+              data-id={todo.id}
+              className="TodoInfo TodoInfo--completed"
+            >
+              <h2 className="TodoInfo__title">{todo.title}</h2>
 
-          <a className="UserInfo" href="mailto:Sincere@april.biz">
-            Leanne Graham
-          </a>
-        </article>
-
-        <article data-id="15" className="TodoInfo TodoInfo--completed">
-          <h2 className="TodoInfo__title">delectus aut autem</h2>
-
-          <a className="UserInfo" href="mailto:Sincere@april.biz">
-            Leanne Graham
-          </a>
-        </article>
-
-        <article data-id="2" className="TodoInfo">
-          <h2 className="TodoInfo__title">
-            quis ut nam facilis et officia qui
-          </h2>
-
-          <a className="UserInfo" href="mailto:Julianne.OConner@kory.org">
-            Patricia Lebsack
-          </a>
-        </article>
+              <a className="UserInfo" href="mailto:Sincere@april.biz">
+                {getUser(todo)?.name}
+              </a>
+            </article>
+          );
+        })}
       </section>
     </div>
   );
