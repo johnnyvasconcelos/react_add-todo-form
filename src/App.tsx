@@ -145,9 +145,7 @@ export const App = () => {
               setSelectError(false);
             }}
           >
-            <option value="0" selected>
-              Choose a user
-            </option>
+            <option value="0">Choose a user</option>
             {usersFromServer.map(user => {
               return (
                 <option key={user.id} value={user.id}>

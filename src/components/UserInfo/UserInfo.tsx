@@ -1,15 +1,14 @@
-import { TodoInterface } from '../../App';
+interface User {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+}
 
-export const UserInfo = ({ todo }: { todo: TodoInterface }) => {
-  const user = todo?.user;
-
-  if (!user) {
-    return null;
-  }
-
+export const UserInfo = ({ user }: { user: User }) => {
   return (
-    <a className="UserInfo" href={`mailto:${user.email}`}>
-      {user.name}
-    </a>
+    <div className="UserInfo">
+      <a href={`mailto:${user.email}`}>{user.name}</a>
+    </div>
   );
 };
