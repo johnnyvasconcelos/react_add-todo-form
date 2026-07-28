@@ -140,6 +140,7 @@ export const App = () => {
           <select
             data-cy="userSelect"
             id="userSelect"
+            value={selectedUserValue}
             onChange={event => {
               setSelectedUserValue(event.target.value);
               setSelectError(false);
