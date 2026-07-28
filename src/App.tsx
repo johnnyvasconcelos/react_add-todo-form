@@ -14,6 +14,7 @@ interface User {
 
 interface Todo {
   id: number;
+  userId: number;
   title: string;
   completed: boolean;
   user: User | null;
@@ -21,6 +22,7 @@ interface Todo {
 
 export interface TodoInterface {
   id: number;
+  userId: number;
   title: string;
   completed: boolean;
   user: {
@@ -33,6 +35,7 @@ export interface TodoInterface {
 
 export interface LocalTodo {
   id: number;
+  userId: number;
   title: string;
   completed: boolean;
   user: {
@@ -57,6 +60,7 @@ export const App = () => {
 
     return {
       id: todo.id,
+      userId: todo.userId,
       title: todo.title,
       completed: todo.completed,
       user: user || null,
@@ -91,6 +95,7 @@ export const App = () => {
         ...todos,
         {
           id: Math.max(...todos.map(todo => todo.id), 0) + 1,
+          userId: user.id,
           title: inputTitle,
           completed: false,
           user: {
