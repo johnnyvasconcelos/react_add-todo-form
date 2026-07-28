@@ -11,8 +11,8 @@ export const App = () => {
   const [titleError, setTitleError] = useState(false);
   const [selectError, setSelectError] = useState(false);
   const initialTodos: Todo[] = todosFromServer.map(todo => {
-    const user = usersFromServer.find(u => {
-      return u.id === todo.userId;
+    const user = usersFromServer.find(currentUser => {
+      return currentUser.id === todo.userId;
     });
 
     return {
@@ -26,8 +26,8 @@ export const App = () => {
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const user = usersFromServer.find(u => {
-      return u.name === selectAuthor;
+    const user = usersFromServer.find(currentUser => {
+      return currentUser.name === selectAuthor;
     });
 
     if (inputTitle.length === 0 && selectAuthor === '0') {
@@ -91,7 +91,7 @@ export const App = () => {
           <input
             type="text"
             data-cy="titleInput"
-            defaultValue={inputTitle}
+            value={inputTitle}
             onChange={event => {
               setInputTitle(event.target.value);
               setTitleError(false);

@@ -11,7 +11,7 @@ interface Todo {
 }
 export const UserInfo = ({ todo }: { todo: Todo }) => {
   return (
-    <a className="UserInfo" href="mailto:Sincere@april.biz">
+    <a className="UserInfo" href={`mailto:${todo.user?.email}`}>
       {todo.user?.name}
     </a>
   );
