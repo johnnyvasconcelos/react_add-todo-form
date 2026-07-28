@@ -5,6 +5,20 @@ import usersFromServer from './api/users';
 import todosFromServer from './api/todos';
 import { TodoList } from './components/TodoList';
 
+interface User {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+}
+
+interface Todo {
+  id: number;
+  title: string;
+  completed: boolean;
+  user: User | null;
+}
+
 export interface TodoInterface {
   id: number;
   title: string;
@@ -53,7 +67,7 @@ export const App = () => {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const user = usersFromServer.find(currentUser => {
-      return currentUser.name === selectedUserValue;
+      return String(currentUser.id) === selectedUserValue;
     });
 
     if (inputTitle.length === 0 && selectedUserValue === DEFAULT_USER_OPTION) {
@@ -94,20 +108,6 @@ export const App = () => {
     }
   }
 
-  interface User {
-    id: number;
-    name: string;
-    username: string;
-    email: string;
-  }
-
-  interface Todo {
-    id: number;
-    title: string;
-    completed: boolean;
-    user: User | null;
-  }
-
   return (
     <div className="App">
       <h1>Add todo form</h1>
@@ -145,7 +145,7 @@ export const App = () => {
             </option>
             {usersFromServer.map(user => {
               return (
-                <option key={user.id} value={user.name}>
+                <option key={user.id} value={user.id}>
                   {user.name}
                 </option>
               );
