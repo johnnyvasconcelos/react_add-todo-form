@@ -65,10 +65,10 @@ export const App = () => {
         return;
       }
 
-      setTodos([
-        ...todos,
+      setTodos(currentTodos => [
+        ...currentTodos,
         {
-          id: Math.max(...todos.map(todo => todo.id), 0) + 1,
+          id: Math.max(...currentTodos.map(todo => todo.id), 0) + 1,
           userId: user.id,
           title: inputTitle,
           completed: false,
@@ -98,6 +98,7 @@ export const App = () => {
             type="text"
             data-cy="titleInput"
             id="titleInput"
+            placeholder="Enter a title"
             value={inputTitle}
             onChange={event => {
               setInputTitle(event.target.value);
