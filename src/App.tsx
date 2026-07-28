@@ -60,8 +60,8 @@ export const App = () => {
     } else {
       setTitleError(false);
       setSelectError(false);
-      // enviar formulário abaixo
-      if (!user || !user.id) {
+      // enviar o formulário abaixo
+      if (!user) {
         return;
       }
 
@@ -81,7 +81,7 @@ export const App = () => {
         },
       ]);
 
-      // limpar
+      // limpa os inputs
       setInputTitle('');
       setSelectedUserValue('0');
     }
