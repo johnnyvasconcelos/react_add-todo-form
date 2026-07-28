@@ -5,45 +5,19 @@ import usersFromServer from './api/users';
 import todosFromServer from './api/todos';
 import { TodoList } from './components/TodoList';
 
-interface User {
+export interface User {
   id: number;
   name: string;
   username: string;
   email: string;
 }
 
-interface Todo {
+export interface Todo {
   id: number;
   userId: number;
   title: string;
   completed: boolean;
   user: User | null;
-}
-
-export interface TodoInterface {
-  id: number;
-  userId: number;
-  title: string;
-  completed: boolean;
-  user: {
-    id: number;
-    name: string;
-    username: string;
-    email: string;
-  } | null;
-}
-
-export interface LocalTodo {
-  id: number;
-  userId: number;
-  title: string;
-  completed: boolean;
-  user: {
-    id: number;
-    name: string;
-    username: string;
-    email: string;
-  } | null;
 }
 
 export const App = () => {

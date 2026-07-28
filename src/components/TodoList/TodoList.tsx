@@ -1,7 +1,7 @@
 import { TodoInfo } from '../TodoInfo';
-import { LocalTodo } from '../../App';
+import { Todo } from '../../App';
 
-export const TodoList = ({ todos }: { todos: LocalTodo[] }) => {
+export const TodoList = ({ todos }: { todos: Todo[] }) => {
   return (
     <section className="TodoList">
       {todos.map(todo => {

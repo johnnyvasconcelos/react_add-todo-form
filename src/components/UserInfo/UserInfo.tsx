@@ -1,14 +1,9 @@
-interface User {
-  id: number;
-  name: string;
-  username: string;
-  email: string;
-}
+import { User } from '../../App';
 
 export const UserInfo = ({ user }: { user: User }) => {
   return (
     <div className="UserInfo">
-      <a href={`mailto:${user.email}`}>{user.name}</a>
+      <a href={`mailto:${user.email}`}>{user.email}</a>
     </div>
   );
 };
