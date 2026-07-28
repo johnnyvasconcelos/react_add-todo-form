@@ -3,24 +3,33 @@ import './App.scss';
 
 import usersFromServer from './api/users';
 import todosFromServer from './api/todos';
+import { TodoList } from './components/TodoList';
 
 export const App = () => {
   const [inputTitle, setInputTitle] = useState('');
   const [selectAuthor, setSelectAuthor] = useState('0');
   const [titleError, setTitleError] = useState(false);
   const [selectError, setSelectError] = useState(false);
-  const [todos, setTodos] = useState(todosFromServer);
-
-  function getUserId() {
-    const us = usersFromServer.find(user => {
-      return user.name === selectAuthor;
+  const initialTodos: Todo[] = todosFromServer.map(todo => {
+    const user = usersFromServer.find(u => {
+      return u.id === todo.userId;
     });
 
-    return us ? us.id : 0;
-  }
+    return {
+      id: todo.id,
+      title: todo.title,
+      completed: todo.completed,
+      user: user || null,
+    };
+  });
+  const [todos, setTodos] = useState(initialTodos);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const user = usersFromServer.find(u => {
+      return u.name === selectAuthor;
+    });
+
     if (inputTitle.length === 0 && selectAuthor === '0') {
       setTitleError(true);
       setSelectError(true);
@@ -34,13 +43,22 @@ export const App = () => {
       setTitleError(false);
       setSelectError(false);
       // enviar formulário abaixo
+      if (!user || !user.id) {
+        return;
+      }
+
       setTodos([
         ...todos,
         {
-          id: todos.length,
+          id: Math.max(...todos.map(t => t.id), 0) + 1,
           title: inputTitle,
-          completed: true,
-          userId: getUserId(),
+          completed: false,
+          user: {
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            email: user.email,
+          },
         },
       ]);
 
@@ -50,16 +68,18 @@ export const App = () => {
     }
   }
 
-  function getUser(todo: Todo) {
-    const userList = usersFromServer.find(user => {
-      return user.id === todo.userId;
-    });
-
-    return userList;
+  interface User {
+    id: number;
+    name: string;
+    username: string;
+    email: string;
   }
 
   interface Todo {
-    userId: number;
+    id: number;
+    title: string;
+    completed: boolean;
+    user: User | null;
   }
 
   return (
@@ -74,6 +94,8 @@ export const App = () => {
             defaultValue={inputTitle}
             onChange={event => {
               setInputTitle(event.target.value);
+              setTitleError(false);
+              setSelectError(false);
             }}
           />
           <span className="error">
@@ -86,6 +108,8 @@ export const App = () => {
             data-cy="userSelect"
             onChange={event => {
               setSelectAuthor(event.target.value);
+              setTitleError(false);
+              setSelectError(false);
             }}
           >
             <option value="0" selected>
@@ -110,23 +134,7 @@ export const App = () => {
         </button>
       </form>
 
-      <section className="TodoList">
-        {todos.map(todo => {
-          return (
-            <article
-              key={todo.id}
-              data-id={todo.id}
-              className="TodoInfo TodoInfo--completed"
-            >
-              <h2 className="TodoInfo__title">{todo.title}</h2>
-
-              <a className="UserInfo" href="mailto:Sincere@april.biz">
-                {getUser(todo)?.name}
-              </a>
-            </article>
-          );
-        })}
-      </section>
+      <TodoList todos={todos} />
     </div>
   );
 };
