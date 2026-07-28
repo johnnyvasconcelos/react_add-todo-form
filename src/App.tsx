@@ -17,9 +17,23 @@ export interface TodoInterface {
   } | null;
 }
 
+export interface LocalTodo {
+  id: number;
+  title: string;
+  completed: boolean;
+  user: {
+    id: number;
+    name: string;
+    username: string;
+    email: string;
+  } | null;
+}
+
 export const App = () => {
+  const DEFAULT_USER_OPTION = '0';
   const [inputTitle, setInputTitle] = useState('');
-  const [selectAuthor, setSelectAuthor] = useState('0');
+  const [selectedUserValue, setSelectedUserValue] =
+    useState(DEFAULT_USER_OPTION);
   const [titleError, setTitleError] = useState(false);
   const [selectError, setSelectError] = useState(false);
   const initialTodos: Todo[] = todosFromServer.map(todo => {
@@ -39,13 +53,13 @@ export const App = () => {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const user = usersFromServer.find(currentUser => {
-      return currentUser.name === selectAuthor;
+      return currentUser.name === selectedUserValue;
     });
 
-    if (inputTitle.length === 0 && selectAuthor === '0') {
+    if (inputTitle.length === 0 && selectedUserValue === DEFAULT_USER_OPTION) {
       setTitleError(true);
       setSelectError(true);
-    } else if (selectAuthor === '0') {
+    } else if (selectedUserValue === DEFAULT_USER_OPTION) {
       setSelectError(true);
       setTitleError(false);
     } else if (inputTitle.length === 0) {
@@ -76,7 +90,7 @@ export const App = () => {
 
       // limpar
       setInputTitle('');
-      setSelectAuthor('0');
+      setSelectedUserValue('0');
     }
   }
 
@@ -98,7 +112,7 @@ export const App = () => {
     <div className="App">
       <h1>Add todo form</h1>
 
-      <form action="/api/todos" method="POST" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className="field">
           <label htmlFor="titleInput">Enter a title</label>
           <input
@@ -109,7 +123,6 @@ export const App = () => {
             onChange={event => {
               setInputTitle(event.target.value);
               setTitleError(false);
-              setSelectError(false);
             }}
           />
           <span className="error">
@@ -123,8 +136,7 @@ export const App = () => {
             data-cy="userSelect"
             id="userSelect"
             onChange={event => {
-              setSelectAuthor(event.target.value);
-              setTitleError(false);
+              setSelectedUserValue(event.target.value);
               setSelectError(false);
             }}
           >

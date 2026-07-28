@@ -1,16 +1,7 @@
 import { TodoInfo } from '../TodoInfo';
-interface Todo {
-  id: number;
-  title: string;
-  completed: boolean;
-  user: {
-    id: number;
-    name: string;
-    username: string;
-    email: string;
-  } | null;
-}
-export const TodoList = ({ todos }: { todos: Todo[] }) => {
+import { LocalTodo } from '../../App';
+
+export const TodoList = ({ todos }: { todos: LocalTodo[] }) => {
   return (
     <section className="TodoList">
       {todos.map(todo => {
