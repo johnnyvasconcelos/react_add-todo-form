@@ -5,6 +5,18 @@ import usersFromServer from './api/users';
 import todosFromServer from './api/todos';
 import { TodoList } from './components/TodoList';
 
+export interface TodoInterface {
+  id: number;
+  title: string;
+  completed: boolean;
+  user: {
+    id: number;
+    name: string;
+    username: string;
+    email: string;
+  } | null;
+}
+
 export const App = () => {
   const [inputTitle, setInputTitle] = useState('');
   const [selectAuthor, setSelectAuthor] = useState('0');
@@ -50,7 +62,7 @@ export const App = () => {
       setTodos([
         ...todos,
         {
-          id: Math.max(...todos.map(t => t.id), 0) + 1,
+          id: Math.max(...todos.map(todo => todo.id), 0) + 1,
           title: inputTitle,
           completed: false,
           user: {
@@ -88,9 +100,11 @@ export const App = () => {
 
       <form action="/api/todos" method="POST" onSubmit={handleSubmit}>
         <div className="field">
+          <label htmlFor="titleInput">Enter a title</label>
           <input
             type="text"
             data-cy="titleInput"
+            id="titleInput"
             value={inputTitle}
             onChange={event => {
               setInputTitle(event.target.value);
@@ -104,8 +118,10 @@ export const App = () => {
         </div>
 
         <div className="field">
+          <label htmlFor="userSelect">Choose a user</label>
           <select
             data-cy="userSelect"
+            id="userSelect"
             onChange={event => {
               setSelectAuthor(event.target.value);
               setTitleError(false);
@@ -125,7 +141,7 @@ export const App = () => {
           </select>
 
           <span className="error">
-            {selectError ? 'Please choose an user' : ''}
+            {selectError ? 'Please choose a user' : ''}
           </span>
         </div>
 
